@@ -1,64 +1,138 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { NoteList } from "@/components/NoteList";
-import {NoteEditor} from "@/components/NoteEditor";
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-}
+import { NoteEditor } from "@/components/NoteEditor";
+import { getNotes, createNote, updateNote, deleteNote } from "@/api/notes";
+import toast from "react-hot-toast";
 
 export default function DashboardPage() {
-  const [notes, setNotes] = useState<Note[]>([
-    { id: "1", title: "Meeting Notes", content: "Discuss project timeline and milestones." },
-    { id: "2", title: "Ideas", content: "Brainstorm new app features and UI improvements." },
-    { id: "3", title: "Todo", content: "Finish dashboard layout and integrate API." },
-  ]);
+  const [notes, setNotes] = useState<any[]>([]);
+  const [editingNote, setEditingNote] = useState<any | null>(null);
+  const [newNoteOpen, setNewNoteOpen] = useState(false);
+  const [currentFolder, setCurrentFolder] = useState("All Notes");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [editingNote, setEditingNote] = useState<Note | null>(null);
+  // Fetch notes on mount
+  useEffect(() => {
+    const fetchNotesData = async () => {
+      try {
+        const data = await getNotes();
+        setNotes(data);
+      } catch (err: any) {
+        toast.error(err.message);
+      }
+    };
+    fetchNotesData();
+  }, []);
 
   const handleEdit = (id: string) => {
-    const note = notes.find((n) => n.id === id);
-    if (note) setEditingNote(note);
-  };
-
-  const handleDelete = (id: string) => {
-    setNotes(notes.filter((note) => note.id !== id));
-    if (editingNote?.id === id) setEditingNote(null);
-  };
-
-  const handleSave = (title: string, content: string) => {
-    if (editingNote) {
-      setNotes((prev) =>
-        prev.map((n) => (n.id === editingNote.id ? { ...n, title, content } : n))
-      );
-    } else {
-      const newNote: Note = {
-        id: (notes.length + 1).toString(),
-        title,
-        content,
-      };
-      setNotes((prev) => [...prev, newNote]);
+    const note = notes.find((n) => n._id === id);
+    if (note) {
+      setEditingNote(note);
+      setNewNoteOpen(false);
     }
-    setEditingNote(null);
   };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteNote(id);
+      toast.success("Note deleted");
+      setNotes((prev) => prev.filter((n) => n._id !== id));
+      if (editingNote?._id === id) setEditingNote(null);
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleSave = async (
+    title: string,
+    content: string,
+    folder?: string
+  ) => {
+    const assignedFolder = folder || currentFolder;
+
+    try {
+      if (editingNote?._id) {
+        // Update existing note
+        const updatedNote = await updateNote(editingNote._id, {
+          title,
+          content,
+          folder: assignedFolder,
+        });
+        toast.success("Note updated");
+        setNotes((prev) =>
+          prev.map((n) => (n._id === updatedNote._id ? updatedNote : n))
+        );
+        setEditingNote(updatedNote);
+      } else {
+        // Create new note
+        const newNote = await createNote({
+          title,
+          content,
+          folder: assignedFolder,
+        });
+        toast.success("Note created");
+        setNotes((prev) => [newNote, ...prev]);
+        setEditingNote(newNote);
+        setNewNoteOpen(false);
+      }
+    } catch (err: any) {
+      console.error("Save error:", err);
+      toast.error(
+        err.response?.data?.message || err.message || "Failed to save note"
+      );
+    }
+  };
+
+  const filteredNotes = notes
+    .filter((note) =>
+      currentFolder === "All Notes"
+        ? true
+        : note.folder.toLowerCase() === currentFolder.toLowerCase()
+    )
+    .filter(
+      (note) =>
+        note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        note.content.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   return (
-    <DashboardLayout>
-      <div className="flex gap-6">
-        <div className="flex-1">
-          <NoteList notes={notes} onEdit={handleEdit} onDelete={handleDelete} />
-        </div>
-        <div className="w-1/3">
-          <NoteEditor
-            key={editingNote?.id ?? "new"}
-            initialTitle={editingNote?.title}
-            initialContent={editingNote?.content}
-            onSave={handleSave}
+    <DashboardLayout
+      currentFolder={currentFolder}
+      setCurrentFolder={setCurrentFolder}
+      onNewNote={() => {
+        setEditingNote(null);
+        setNewNoteOpen(true);
+      }}
+      onSearch={setSearchQuery}
+    >
+      <div className="flex gap-6 w-full">
+        {/* Note list */}
+        <div className="flex-1 max-w-xs">
+          <NoteList
+            notes={filteredNotes}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
           />
+        </div>
+
+        {/* Editor */}
+        <div className="flex-1">
+          {(editingNote || newNoteOpen) && (
+            <NoteEditor
+              key={editingNote?._id ?? "new"}
+              title={editingNote?.title ?? ""}
+              content={editingNote?.content ?? ""}
+              folder={editingNote?.folder ?? currentFolder}
+              onSave={handleSave}
+              onDelete={() => {
+                if (editingNote?._id) handleDelete(editingNote._id);
+                setNewNoteOpen(false);
+              }}
+            />
+          )}
         </div>
       </div>
     </DashboardLayout>
