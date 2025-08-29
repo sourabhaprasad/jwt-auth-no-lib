@@ -15,7 +15,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:4000",
-      "https://jwt-auth-no-lib.onrender.com",
+      "https://jwt-auth-no-lib.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],

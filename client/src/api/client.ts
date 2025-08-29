@@ -29,7 +29,7 @@ export async function apiRequest(
     if (!res.ok) {
       return {
         ok: false,
-        error: data?.message || `Request failed with status ${res.status}`,
+        error: data?.error || `Request failed with status ${res.status}`,
       };
     }
 
