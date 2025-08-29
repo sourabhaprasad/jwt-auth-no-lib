@@ -19,15 +19,7 @@ import { Blockquote } from "@tiptap/extension-blockquote";
 import { HorizontalRule } from "@tiptap/extension-horizontal-rule";
 import { RichTextToolbar } from "./RichTextToolbar";
 import GradientButton from "./GradientButton";
-import {
-  Save,
-  Share2,
-  Trash2,
-  Archive,
-  Plus,
-  ChevronDown,
-  Copy,
-} from "lucide-react";
+import { Save, Trash2, Archive, Plus, ChevronDown, Copy } from "lucide-react";
 import toast from "react-hot-toast";
 
 const folders = ["Default", "Work", "Personal", "Idea", "Projects"];
@@ -37,7 +29,6 @@ interface NoteEditorProps {
   content?: string;
   folder?: string;
   onSave?: (title: string, content: string, folder?: string) => void;
-  onShare?: (title: string, content: string) => void;
   onDelete?: () => void;
   onArchive?: () => void;
 }
@@ -47,7 +38,6 @@ export function NoteEditor({
   content: initialContent = "",
   folder: initialFolder = "Default",
   onSave,
-  onShare,
   onDelete,
   onArchive,
 }: NoteEditorProps) {

@@ -3,13 +3,15 @@ import axios from "axios";
 
 const API_URL = "http://localhost:4000";
 
-export const createNote = async (note: {
+interface NoteData {
   title: string;
   content: string;
   folder?: string;
   color?: string;
   tags?: string[];
-}) => {
+}
+
+export const createNote = async (note: NoteData) => {
   const res = await axios.post(`${API_URL}/notes`, note, {
     withCredentials: true,
   });
@@ -28,7 +30,7 @@ export const getNoteById = async (id: string) => {
   return res.data;
 };
 
-export const updateNote = async (id: string, note: any) => {
+export const updateNote = async (id: string, note: Partial<NoteData>) => {
   const res = await axios.put(`${API_URL}/notes/${id}`, note, {
     withCredentials: true,
   });

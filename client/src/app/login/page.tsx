@@ -23,8 +23,9 @@ export default function LoginPage() {
         toast.success("Logged in successfully!");
         router.push("/dashboard"); // redirect to dashboard
       }
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      const error = err as Error;
+      toast.error(error.message);
     }
   };
 

@@ -1,11 +1,21 @@
 // src/api/client.ts
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
+interface ApiResponse<T = unknown> {
+  ok: boolean;
+  data?: T;
+  error?: string;
+}
+
+interface RequestBody {
+  [key: string]: unknown;
+}
+
 export async function apiRequest(
   path: string,
   method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
-  body?: any
-): Promise<{ ok: boolean; data?: any; error?: string }> {
+  body?: RequestBody
+): Promise<ApiResponse> {
   try {
     const res = await fetch(`${BASE_URL}${path}`, {
       method,
@@ -24,7 +34,8 @@ export async function apiRequest(
     }
 
     return { ok: true, data };
-  } catch (err: any) {
-    return { ok: false, error: err.message || "Network error" };
+  } catch (err: unknown) {
+    const error = err as Error;
+    return { ok: false, error: error.message || "Network error" };
   }
 }

@@ -4,17 +4,23 @@ import { Card } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
 import { Editor } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
+import { Note } from "@/types/note";
 
-function renderHTMLFromJSON(json: any) {
-  const editor = new Editor({
-    extensions: [StarterKit],
-  });
-  editor.commands.setContent(json);
-  return editor.getHTML();
+function renderHTMLFromJSON(json: string) {
+  try {
+    const parsedContent = JSON.parse(json);
+    const editor = new Editor({
+      extensions: [StarterKit],
+    });
+    editor.commands.setContent(parsedContent);
+    return editor.getHTML();
+  } catch {
+    return "";
+  }
 }
 
 interface NoteListProps {
-  notes?: any[];
+  notes?: Note[];
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 }

@@ -9,7 +9,6 @@ interface DashboardLayoutProps {
   currentFolder: string;
   setCurrentFolder: (folder: string) => void;
   onNewNote: () => void;
-  onSearch: (query: string) => void;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -17,7 +16,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   currentFolder,
   setCurrentFolder,
   onNewNote,
-  onSearch,
 }) => {
   return (
     <div className="flex h-screen bg-black text-white">

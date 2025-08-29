@@ -1,42 +1,27 @@
 // components/NoteCard.tsx
-import { cn } from "@/app/lib/utils";
+import { Card } from "@/components/ui/card";
+import { Trash2 } from "lucide-react";
 
 interface NoteCardProps {
   title: string;
   content: string;
-  onEdit?: () => void;
-  onDelete?: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-export default function NoteCard({
-  title,
-  content,
-  onEdit,
-  onDelete,
-}: NoteCardProps) {
+export function NoteCard({ title, content, onEdit, onDelete }: NoteCardProps) {
   return (
-    <div className="bg-black p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow border border-border">
-      <h3 className="text-foreground font-semibold text-lg">{title}</h3>
-      <p className="text-muted-foreground mt-2">{content.slice(0, 100)}...</p>
-
-      <div className="mt-4 flex gap-2">
-        {onEdit && (
-          <button
-            onClick={onEdit}
-            className="px-3 py-1 bg-accent text-accent-foreground hover:opacity-90 rounded-md text-sm transition"
-          >
-            Edit
-          </button>
-        )}
-        {onDelete && (
-          <button
-            onClick={onDelete}
-            className="px-3 py-1 bg-destructive text-destructive-foreground hover:opacity-90 rounded-md text-sm transition"
-          >
-            Delete
-          </button>
-        )}
+    <Card className="p-4 cursor-pointer hover:bg-gray-50 transition-colors">
+      <div onClick={onEdit}>
+        <h3 className="font-semibold text-lg mb-2">{title}</h3>
+        <p className="text-gray-600 text-sm line-clamp-2">{content}</p>
       </div>
-    </div>
+      <button
+        onClick={onDelete}
+        className="mt-2 text-red-500 hover:text-red-700 transition-colors"
+      >
+        <Trash2 size={16} />
+      </button>
+    </Card>
   );
 }

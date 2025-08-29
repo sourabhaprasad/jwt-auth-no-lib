@@ -28,9 +28,10 @@ export const signup = async (username: string, password: string) => {
 
       return null;
     }
-  } catch (err: any) {
-    console.error("Signup error:", err);
-    toast.error(err?.message || "Network error during signup");
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error("Signup error:", error);
+    toast.error(error?.message || "Network error during signup");
     return null;
   }
 };
@@ -51,9 +52,10 @@ export const login = async (username: string, password: string) => {
       toast.error(errorMsg);
       return null;
     }
-  } catch (err: any) {
-    console.error("Login error:", err);
-    toast.error(err?.message || "Network error during login");
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error("Login error:", error);
+    toast.error(error?.message || "Network error during login");
     return null;
   }
 };
@@ -69,9 +71,10 @@ export const logout = async () => {
       toast.error(errorMsg);
       return null;
     }
-  } catch (err: any) {
-    console.error("Logout error:", err);
-    toast.error(err?.message || "Network error during logout");
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error("Logout error:", error);
+    toast.error(error?.message || "Network error during logout");
     return null;
   }
 };

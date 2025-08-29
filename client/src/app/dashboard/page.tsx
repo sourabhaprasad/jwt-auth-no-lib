@@ -5,14 +5,14 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { NoteList } from "@/components/NoteList";
 import { NoteEditor } from "@/components/NoteEditor";
 import { getNotes, createNote, updateNote, deleteNote } from "@/api/notes";
+import { Note } from "@/types/note";
 import toast from "react-hot-toast";
 
 export default function DashboardPage() {
-  const [notes, setNotes] = useState<any[]>([]);
-  const [editingNote, setEditingNote] = useState<any | null>(null);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [newNoteOpen, setNewNoteOpen] = useState(false);
   const [currentFolder, setCurrentFolder] = useState("All Notes");
-  const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch notes on mount
   useEffect(() => {
@@ -20,8 +20,9 @@ export default function DashboardPage() {
       try {
         const data = await getNotes();
         setNotes(data);
-      } catch (err: any) {
-        toast.error(err.message);
+      } catch (err: unknown) {
+        const error = err as Error;
+        toast.error(error.message);
       }
     };
     fetchNotesData();
@@ -41,8 +42,9 @@ export default function DashboardPage() {
       toast.success("Note deleted");
       setNotes((prev) => prev.filter((n) => n._id !== id));
       if (editingNote?._id === id) setEditingNote(null);
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      const error = err as Error;
+      toast.error(error.message);
     }
   };
 
@@ -78,25 +80,22 @@ export default function DashboardPage() {
         setEditingNote(newNote);
         setNewNoteOpen(false);
       }
-    } catch (err: any) {
-      console.error("Save error:", err);
+    } catch (err: unknown) {
+      const error = err as Error & {
+        response?: { data?: { message?: string } };
+      };
+      console.error("Save error:", error);
       toast.error(
-        err.response?.data?.message || err.message || "Failed to save note"
+        error.response?.data?.message || error.message || "Failed to save note"
       );
     }
   };
 
-  const filteredNotes = notes
-    .filter((note) =>
-      currentFolder === "All Notes"
-        ? true
-        : note.folder.toLowerCase() === currentFolder.toLowerCase()
-    )
-    .filter(
-      (note) =>
-        note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        note.content.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  const filteredNotes = notes.filter((note) =>
+    currentFolder === "All Notes"
+      ? true
+      : note.folder?.toLowerCase() === currentFolder.toLowerCase()
+  );
 
   return (
     <DashboardLayout
@@ -106,7 +105,6 @@ export default function DashboardPage() {
         setEditingNote(null);
         setNewNoteOpen(true);
       }}
-      onSearch={setSearchQuery}
     >
       <div className="flex gap-6 w-full">
         {/* Note list */}

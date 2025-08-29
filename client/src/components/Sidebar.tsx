@@ -10,8 +10,6 @@ import {
   LogOut,
   Folder,
   Briefcase,
-  Archive,
-  Trash2,
   Lightbulb,
   ChevronLeft,
   ChevronRight,

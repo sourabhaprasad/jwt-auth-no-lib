@@ -37,7 +37,12 @@ export const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor }) => {
 
   const applyLink = () => {
     if (linkInput) {
-      editor.chain().focus().extendMarkRange("link").setLink({ href: linkInput }).run();
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: linkInput })
+        .run();
       setLinkInput("");
     }
   };
@@ -54,16 +59,28 @@ export const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor }) => {
     <div className="flex flex-wrap items-center gap-2 p-2 border-b border-white/20 bg-black">
       {/* Text Style */}
       <div className="flex items-center gap-1">
-        <button className={btnClass} onClick={() => editor.chain().focus().toggleBold().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().toggleBold().run()}
+        >
           <FaBold />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().toggleItalic().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+        >
           <FaItalic />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().toggleUnderline().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+        >
           <FaUnderline />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().toggleStrike().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+        >
           <FaStrikethrough />
         </button>
       </div>
@@ -76,7 +93,12 @@ export const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor }) => {
         onChange={(e) => {
           const level = e.target.value as "0" | "1" | "2" | "3";
           if (level === "0") editor.chain().focus().setParagraph().run();
-          else editor.chain().focus().toggleHeading({ level: parseInt(level) }).run();
+          else
+            editor
+              .chain()
+              .focus()
+              .toggleHeading({ level: parseInt(level) as 1 | 2 | 3 })
+              .run();
         }}
         className="px-2 py-1 rounded bg-gray-800 text-white border border-white/20"
       >
@@ -90,10 +112,16 @@ export const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor }) => {
 
       {/* Lists */}
       <div className="flex items-center gap-1">
-        <button className={btnClass} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+        >
           <FaListUl />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        >
           <FaListOl />
         </button>
       </div>
@@ -102,13 +130,28 @@ export const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor }) => {
 
       {/* Block Elements */}
       <div className="flex items-center gap-1">
-        <button className={btnClass} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        >
           <FaQuoteRight />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().setHorizontalRule().run()}
+        >
           ―
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().insertTable({ rows: 2, cols: 2, withHeaderRow: true }).run()}>
+        <button
+          className={btnClass}
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .insertTable({ rows: 2, cols: 2, withHeaderRow: true })
+              .run()
+          }
+        >
           <FaTable />
         </button>
       </div>
@@ -117,16 +160,28 @@ export const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor }) => {
 
       {/* Alignment */}
       <div className="flex items-center gap-1">
-        <button className={btnClass} onClick={() => editor.chain().focus().setTextAlign("left").run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().setTextAlign("left").run()}
+        >
           <FaAlignLeft />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().setTextAlign("center").run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().setTextAlign("center").run()}
+        >
           <FaAlignCenter />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().setTextAlign("right").run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().setTextAlign("right").run()}
+        >
           <FaAlignRight />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().setTextAlign("justify").run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+        >
           <FaAlignJustify />
         </button>
       </div>
@@ -135,10 +190,16 @@ export const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor }) => {
 
       {/* Undo / Redo */}
       <div className="flex items-center gap-1">
-        <button className={btnClass} onClick={() => editor.chain().focus().undo().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().undo().run()}
+        >
           <FaUndo />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().redo().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().redo().run()}
+        >
           <FaRedo />
         </button>
       </div>
@@ -157,7 +218,10 @@ export const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor }) => {
         <button className={btnClass} onClick={applyLink}>
           <FaLink />
         </button>
-        <button className={btnClass} onClick={() => editor.chain().focus().unsetLink().run()}>
+        <button
+          className={btnClass}
+          onClick={() => editor.chain().focus().unsetLink().run()}
+        >
           <FaUnlink />
         </button>
       </div>
