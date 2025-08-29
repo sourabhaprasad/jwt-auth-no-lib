@@ -52,17 +52,18 @@ export const login = async (req, res) => {
   const rt = new RefreshToken({ token: rtString, user: user._id, expiresAt });
   await rt.save();
 
-  // Set cookies (httpOnly)
+  // TODO: Set cookies (httpOnly)
   res.cookie("access_token", accessToken, {
     httpOnly: true,
     maxAge: ACCESS_TOKEN_EXPIRES * 1000,
-    secure: false, // set true in prod
+    // For localhost dev with Next.js on a different port, allow cross-site cookies
+    secure: false, // set true in production behind HTTPS
     sameSite: "lax",
   });
   res.cookie("refresh_token", rtString, {
     httpOnly: true,
     maxAge: REFRESH_TOKEN_EXPIRES * 1000,
-    secure: false,
+    secure: false, // set true in production behind HTTPS
     sameSite: "lax",
   });
 

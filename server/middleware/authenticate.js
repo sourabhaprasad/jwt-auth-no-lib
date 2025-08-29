@@ -1,21 +1,19 @@
 // middleware/authenticate.js
-import User from "../models/User.js";
-import { verifyJWT } from "../utils/jwt-utils.js";
+import { RefreshToken } from "../models/RefreshToken.js";
 
-const authenticate = async (req, res, next) => {
+export default async function authenticate(req, res, next) {
   try {
-    const token = req.cookies?.access_token;
-    if (!token) return res.status(401).json({ message: "No token provided" });
+    const rtString = req.cookies?.refresh_token;
+    if (!rtString) return res.status(401).json({ error: "Not logged in" });
 
-    const decoded = verifyJWT(token); // <-- use custom verifyJWT
-    const user = await User.findById(decoded.sub); // payload uses "sub" for userId
-    if (!user) return res.status(401).json({ message: "User not found" });
+    const token = await RefreshToken.findOne({ token: rtString }).populate("user");
+    if (!token || token.revoked || token.expiresAt < new Date()) {
+      return res.status(401).json({ error: "Invalid session" });
+    }
 
-    req.user = user; // attach user to request
+    req.user = token.user; // attach user to request
     next();
   } catch (err) {
-    res.status(401).json({ message: "Unauthorized", error: err.message });
+    res.status(500).json({ error: "Authentication failed" });
   }
-};
-
-export default authenticate;
+}
