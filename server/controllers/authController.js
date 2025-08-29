@@ -9,6 +9,8 @@ import {
 } from "../config/index.js";
 import crypto from "crypto";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const signup = async (req, res) => {
   const { username, password, role } = req.body;
   if (!username || !password)
@@ -52,19 +54,18 @@ export const login = async (req, res) => {
   const rt = new RefreshToken({ token: rtString, user: user._id, expiresAt });
   await rt.save();
 
-  // TODO: Set cookies (httpOnly)
   res.cookie("access_token", accessToken, {
     httpOnly: true,
     maxAge: ACCESS_TOKEN_EXPIRES * 1000,
-    // For localhost dev with Next.js on a different port, allow cross-site cookies
-    secure: true, // set true in production behind HTTPS
-    sameSite: "none",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
+
   res.cookie("refresh_token", rtString, {
     httpOnly: true,
     maxAge: REFRESH_TOKEN_EXPIRES * 1000,
-    secure: true, // set true in production behind HTTPS
-    sameSite: "none",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
 
   res.json({ ok: true });
