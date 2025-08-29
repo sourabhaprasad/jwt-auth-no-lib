@@ -2,6 +2,23 @@
 
 A full-stack authentication system built without any JWT libraries, featuring custom token creation/verification using Node's crypto, refresh token rotation, secure notes API, and a modern Next.js 14 frontend with shadcn/ui.
 
+## Table of Contents
+
+- [Features](#features)
+  - [Backend](#backend)
+  - [Frontend](#frontend)
+- [Prerequisites](#prerequisites)
+- [Installation & Setup](#installation--setup)
+- [Project Structure](#project-structure)
+- [API Endpoints](#api-endpoints)
+- [Testing with cURL](#testing-with-curl)
+- [Security Features](#security-features)
+- [Technical Implementation](#technical-implementation)
+- [Dependencies](#dependencies)
+- [Contributing](#contributing)
+- [My Blog on Medium](#related-article)
+- [Acknowledgments](#acknowledgments)
+
 ## Features
 
 ### Backend
@@ -31,7 +48,7 @@ A full-stack authentication system built without any JWT libraries, featuring cu
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/sourabhaprasad/jwt-auth-no-lib.git
 cd jwt-auth-no-lib
 ```
 
@@ -223,3 +240,7 @@ The custom JWT implementation is located in `server/utils/jwt-utils.js`:
 - Built with [Next.js](https://nextjs.org/)
 - UI components from [shadcn/ui](https://ui.shadcn.com/)
 - Icons from [Lucide](https://lucide.dev/)
+
+## Related Article
+
+For a detailed explanation of the JWT implementation and technical insights, check out my blog post: [Building JWT Authentication From Scratch Without Libraries](https://medium.com/@sourabhaprasad/building-jwt-authentication-from-scratch-without-libraries-d590ff522e1b)
