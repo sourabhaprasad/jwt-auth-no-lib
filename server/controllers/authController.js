@@ -58,13 +58,13 @@ export const login = async (req, res) => {
     maxAge: ACCESS_TOKEN_EXPIRES * 1000,
     // For localhost dev with Next.js on a different port, allow cross-site cookies
     secure: false, // set true in production behind HTTPS
-    sameSite: "lax",
+    sameSite: "none",
   });
   res.cookie("refresh_token", rtString, {
     httpOnly: true,
     maxAge: REFRESH_TOKEN_EXPIRES * 1000,
     secure: false, // set true in production behind HTTPS
-    sameSite: "lax",
+    sameSite: "none",
   });
 
   res.json({ ok: true });
@@ -99,12 +99,12 @@ export const refresh = async (req, res) => {
   res.cookie("access_token", accessToken, {
     httpOnly: true,
     maxAge: ACCESS_TOKEN_EXPIRES * 1000,
-    sameSite: "lax",
+    sameSite: "none",
   });
   res.cookie("refresh_token", newRtString, {
     httpOnly: true,
     maxAge: REFRESH_TOKEN_EXPIRES * 1000,
-    sameSite: "lax",
+    sameSite: "none",
   });
 
   res.json({ ok: true });
