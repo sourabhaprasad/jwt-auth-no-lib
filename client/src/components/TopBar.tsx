@@ -2,12 +2,11 @@
 
 import { Plus } from "lucide-react";
 import GradientButton from "./GradientButton";
+import { useDashboard } from "@/context/DashboardContext";
 
-interface TopBarProps {
-  onNewNote: () => void;
-}
+export default function TopBar() {
+  const { onNewNote } = useDashboard();
 
-export default function TopBar({ onNewNote }: TopBarProps) {
   return (
     <div className="flex items-center justify-between p-4 border-b border-white/20">
       <h1 className="text-xl font-bold text-white">My Notes</h1>

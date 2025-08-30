@@ -14,11 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-
-interface SidebarProps {
-  currentFolder: string;
-  setCurrentFolder: (folder: string) => void;
-}
+import { useDashboard } from "@/context/DashboardContext";
 
 const navItems = [{ name: "All Notes", folder: "All Notes", icon: FileText }];
 
@@ -27,16 +23,13 @@ const folders = [
   { name: "Personal", icon: Home },
   { name: "Idea", icon: Lightbulb },
   { name: "Projects", icon: Folder },
-  // { name: "Archive", icon: Archive },
-  // { name: "Trash", icon: Trash2 },
 ];
 
-export default function Sidebar({
-  currentFolder,
-  setCurrentFolder,
-}: SidebarProps) {
+export default function Sidebar() {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
+
+  const { currentFolder, setCurrentFolder } = useDashboard();
 
   const handleLogout = async () => {
     try {
@@ -50,7 +43,7 @@ export default function Sidebar({
   return (
     <aside
       className={cn(
-        `h-screen p-2 flex flex-col justify-between transition-all duration-300 bg-black`,
+        "h-screen p-2 flex flex-col justify-between transition-all duration-300 bg-black",
         collapsed ? "w-20" : "w-56"
       )}
     >

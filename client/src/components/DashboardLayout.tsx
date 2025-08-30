@@ -6,26 +6,15 @@ import TopBar from "./TopBar";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
-  currentFolder: string;
-  setCurrentFolder: (folder: string) => void;
-  onNewNote: () => void;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({
-  children,
-  currentFolder,
-  setCurrentFolder,
-  onNewNote,
-}) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <div className="flex h-screen bg-black text-white">
-      <Sidebar
-        currentFolder={currentFolder}
-        setCurrentFolder={setCurrentFolder}
-      />
+      <Sidebar />
 
       <div className="flex-1 flex flex-col">
-        <TopBar onNewNote={onNewNote} />
+        <TopBar />
 
         <main className="flex-1 flex overflow-hidden p-6">{children}</main>
       </div>

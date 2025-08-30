@@ -7,6 +7,7 @@ import { NoteEditor } from "@/components/NoteEditor";
 import { getNotes, createNote, updateNote, deleteNote } from "@/api/notes";
 import { Note } from "@/types/note";
 import toast from "react-hot-toast";
+import { DashboardProvider } from "@/context/DashboardContext";
 
 export default function DashboardPage() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -98,41 +99,43 @@ export default function DashboardPage() {
   );
 
   return (
-    <DashboardLayout
-      currentFolder={currentFolder}
-      setCurrentFolder={setCurrentFolder}
-      onNewNote={() => {
-        setEditingNote(null);
-        setNewNoteOpen(true);
+    <DashboardProvider
+      value={{
+        currentFolder,
+        setCurrentFolder,
+        onNewNote: () => {
+          setEditingNote(null);
+          setNewNoteOpen(true);
+        },
       }}
     >
-      <div className="flex gap-6 w-full">
-        {/* Note list */}
-        <div className="flex-1 max-w-xs">
-          <NoteList
-            notes={filteredNotes}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        </div>
-
-        {/* Editor */}
-        <div className="flex-1">
-          {(editingNote || newNoteOpen) && (
-            <NoteEditor
-              key={editingNote?._id ?? "new"}
-              title={editingNote?.title ?? ""}
-              content={editingNote?.content ?? ""}
-              folder={editingNote?.folder ?? currentFolder}
-              onSave={handleSave}
-              onDelete={() => {
-                if (editingNote?._id) handleDelete(editingNote._id);
-                setNewNoteOpen(false);
-              }}
+      <DashboardLayout>
+        <div className="flex gap-6 w-full">
+          <div className="flex-1 max-w-xs">
+            <NoteList
+              notes={filteredNotes}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
-          )}
+          </div>
+
+          <div className="flex-1">
+            {(editingNote || newNoteOpen) && (
+              <NoteEditor
+                key={editingNote?._id ?? "new"}
+                title={editingNote?.title ?? ""}
+                content={editingNote?.content ?? ""}
+                folder={editingNote?.folder ?? currentFolder}
+                onSave={handleSave}
+                onDelete={() => {
+                  if (editingNote?._id) handleDelete(editingNote._id);
+                  setNewNoteOpen(false);
+                }}
+              />
+            )}
+          </div>
         </div>
-      </div>
-    </DashboardLayout>
+      </DashboardLayout>
+    </DashboardProvider>
   );
 }
