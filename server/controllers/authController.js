@@ -72,7 +72,6 @@ export const login = async (req, res) => {
 };
 
 export const refresh = async (req, res) => {
-  // read refresh token from cookie
   const rtString = req.cookies?.refresh_token;
   if (!rtString) return res.status(401).json({ error: "no refresh token" });
 
@@ -81,7 +80,7 @@ export const refresh = async (req, res) => {
     return res.status(401).json({ error: "invalid refresh token" });
   }
 
-  // rotate: revoke old, create new
+  // revoke old, issue new
   dbRt.revoked = true;
   await dbRt.save();
 
@@ -97,15 +96,22 @@ export const refresh = async (req, res) => {
     { sub: dbRt.user._id.toString(), role: dbRt.user.role },
     { expiresIn: ACCESS_TOKEN_EXPIRES }
   );
+
+  const cookieOptions = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
+  };
+
   res.cookie("access_token", accessToken, {
-    httpOnly: true,
+    ...cookieOptions,
     maxAge: ACCESS_TOKEN_EXPIRES * 1000,
-    sameSite: "none",
   });
+
   res.cookie("refresh_token", newRtString, {
-    httpOnly: true,
+    ...cookieOptions,
     maxAge: REFRESH_TOKEN_EXPIRES * 1000,
-    sameSite: "none",
   });
 
   res.json({ ok: true });
@@ -116,8 +122,16 @@ export const logout = async (req, res) => {
   if (rtString) {
     await RefreshToken.findOneAndUpdate({ token: rtString }, { revoked: true });
   }
-  // clear cookies
-  res.clearCookie("access_token");
-  res.clearCookie("refresh_token");
+
+  const cookieOptions = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
+  };
+
+  res.clearCookie("access_token", cookieOptions);
+  res.clearCookie("refresh_token", cookieOptions);
+
   res.json({ ok: true });
 };
