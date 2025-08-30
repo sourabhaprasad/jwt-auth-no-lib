@@ -226,6 +226,7 @@ The custom JWT implementation is located in `server/utils/jwt-utils.js`:
 - `react` & `react-dom` - UI library
 - `shadcn/ui` - Component library (Radix UI + Tailwind)
 - `lucide-react` - Icon library
+- `tiptap editor` - Text editor compatible with nextjs
 
 ## Contributing
 
